@@ -1,0 +1,77 @@
+/* Custom styles for Capacity Management slides */
+
+/* Reset any scaling that might be applied in app/slide view */
+.slide {
+  zoom: 1 !important;
+  transform: none !important;
+}
+
+/* Table styling - force smaller sizes */
+table {
+  font-size: 14px !important;
+  width: auto !important;
+  max-width: 100% !important;
+}
+
+th, td {
+  font-size: 14px !important;
+  padding: 4px 8px !important;
+}
+
+thead {
+  font-size: 14px !important;
+}
+
+/* Code block styling - force smaller sizes */
+pre {
+  font-size: 12px !important;
+  padding: 6px 10px !important;
+  margin: 4px 0 !important;
+  max-width: 100% !important;
+  overflow-x: auto !important;
+  white-space: pre !important;
+}
+
+code {
+  font-size: 12px !important;
+}
+
+pre code {
+  font-size: 12px !important;
+  white-space: pre !important;
+}
+
+/* More specific targeting for marimo elements */
+[data-testid="marimo-output"] table,
+.marimo-output table {
+  font-size: 14px !important;
+}
+
+[data-testid="marimo-output"] th,
+[data-testid="marimo-output"] td,
+.marimo-output th,
+.marimo-output td {
+  font-size: 14px !important;
+  padding: 4px 8px !important;
+}
+
+[data-testid="marimo-output"] pre,
+.marimo-output pre {
+  font-size: 12px !important;
+}
+
+[data-testid="marimo-output"] code,
+.marimo-output code {
+  font-size: 12px !important;
+}
+
+/* Math display equations - consistent sizing across all views */
+/* KaTeX selectors */
+.katex-display,
+.katex {
+  font-size: 22px !important;
+}
+
+.katex-display {
+  margin: 0.5em 0 !important;
+}

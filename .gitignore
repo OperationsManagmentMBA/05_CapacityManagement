@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv/
+
+# OS files
+.DS_Store
+
+# IDE / Tools
+.serena/
+.claude/
+
+# Project-specific exclusions
+background/
+main.py
