@@ -9,4 +9,6 @@ dependencies = [
     "marimo>=0.19.4",
     "numpy>=2.4.1",
     "pandas>=2.3.3",
+    "polars>=1.37.1",
+    "pyarrow>=22.0.0",
 ]
