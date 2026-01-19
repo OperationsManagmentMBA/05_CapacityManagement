@@ -51,7 +51,7 @@ def _():
 def _(mo):
     # Slide classes for consistent presentation layout
     from dataclasses import dataclass
-    from typing import Optional as _Optional
+    from typing import Optional as _Optional, Any as _Any
     import html as _html
 
     # Slide constants
@@ -73,10 +73,10 @@ def _(mo):
         page_number: int
         layout_type: str = "side-by-side"
         subtitle: _Optional[str] = None
-        content1: _Optional[mo.core.MIME] = None
-        content2: _Optional[mo.core.MIME] = None
+        content1: _Optional[_Any] = None
+        content2: _Optional[_Any] = None
 
-        def _header(self) -> mo.core.MIME:
+        def _header(self) -> _Any:
             safe_title = _html.escape(self.title)
             return mo.Html(
                 f"""
@@ -87,7 +87,7 @@ def _(mo):
                 """
             )
 
-        def _footer(self) -> mo.core.MIME:
+        def _footer(self) -> _Any:
             safe_page = _html.escape(str(self.page_number))
             safe_chair = _html.escape(self.chair)
             left_html = f"Page {safe_page} &nbsp;&nbsp;|&nbsp;&nbsp; {safe_chair}"
@@ -108,7 +108,7 @@ def _(mo):
                 """
             )
 
-        def _title_layout(self) -> mo.core.MIME:
+        def _title_layout(self) -> _Any:
             safe_title = _html.escape(self.title)
             sub = f'<div class="title-slide-sub" style="font-size: 40px; margin: 0 0 16px 0; color: #374151;">{_html.escape(self.subtitle)}</div>' if self.subtitle else ""
             body = mo.Html(
@@ -133,7 +133,7 @@ def _(mo):
                 """
             )
 
-        def _one_column_layout(self) -> mo.core.MIME:
+        def _one_column_layout(self) -> _Any:
             content = mo.md(self.content1) if isinstance(self.content1, str) else (self.content1 or mo.md(""))
             content_wrapped = mo.vstack([content], gap=0).style({"gap": "0", "margin": "0", "padding": "0"})
             body = mo.Html(
@@ -170,7 +170,7 @@ def _(mo):
                 """
             )
 
-        def _side_by_side_layout(self) -> mo.core.MIME:
+        def _side_by_side_layout(self) -> _Any:
             left_content = mo.md(self.content1) if isinstance(self.content1, str) else (self.content1 or mo.md(""))
             right_content = mo.md(self.content2) if isinstance(self.content2, str) else (self.content2 or mo.md(""))
             left = mo.vstack([left_content], gap=0).style({"gap": "0", "margin": "0", "padding": "0"})
@@ -214,7 +214,7 @@ def _(mo):
                 """
             )
 
-        def _section_layout(self) -> mo.core.MIME:
+        def _section_layout(self) -> _Any:
             """Section/agenda separator slide with large centered section title and optional agenda."""
             safe_title = _html.escape(self.title)
             # subtitle contains the section number (e.g., "Section 1")
@@ -245,7 +245,7 @@ def _(mo):
                 """
             )
 
-        def render(self) -> mo.core.MIME:
+        def render(self) -> _Any:
             if self.layout_type == "title":
                 return self._title_layout()
             elif self.layout_type == "section":
@@ -262,7 +262,7 @@ def _(mo):
             self.logo_url = logo_url
             self._page_counter = 0
 
-        def styles(self) -> mo.core.MIME:
+        def styles(self) -> _Any:
             return mo.Html(
                 f"""
                 <style>
