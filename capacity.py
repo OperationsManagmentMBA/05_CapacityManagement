@@ -14,12 +14,10 @@ def _():
     # Import required libraries
     import marimo as mo
     import altair as alt
-    import polars as pl
+    import pandas as pd
     import numpy as np
     import math
-    import warnings
-    warnings.filterwarnings("ignore", message=".*narwhals.*is_pandas_dataframe.*")
-    return alt, math, mo, np, pl
+    return alt, math, mo, np, pd
 
 
 @app.cell(hide_code=True)
@@ -919,7 +917,7 @@ def _(mo, sc, stability_lambda, stability_mu):
 
 
 @app.cell(hide_code=True)
-def _(alt, mo, np, pl, sc):
+def _(alt, mo, np, pd, sc):
     # Slide 2.8 — The nonlinearity insight
     slide_2_8 = sc.create_slide(
         "The nonlinearity insight",
@@ -936,7 +934,7 @@ def _(alt, mo, np, pl, sc):
     W_values = L_values / (rho_values * _mu) * 60  # in minutes
     Wq_values = Lq_values / (rho_values * _mu) * 60  # in minutes
 
-    df_nonlinear = pl.DataFrame({
+    df_nonlinear = pd.DataFrame({
         "rho": np.round(rho_values, 2),
         "L": np.round(L_values, 2),
         "Lq": np.round(Lq_values, 2),
@@ -944,7 +942,7 @@ def _(alt, mo, np, pl, sc):
         "Wq": np.round(Wq_values, 1)
     })
 
-    nonlinear_chart = alt.Chart(df_nonlinear.to_pandas()).mark_line(strokeWidth=3, color="#2563eb").encode(
+    nonlinear_chart = alt.Chart(df_nonlinear).mark_line(strokeWidth=3, color="#2563eb").encode(
         x=alt.X("rho:Q", title="Utilization (ρ)", scale=alt.Scale(domain=[0, 1])),
         y=alt.Y("L:Q", title="Avg customers in system (L)", scale=alt.Scale(domain=[0, 30])),
         tooltip=[
@@ -961,18 +959,18 @@ def _(alt, mo, np, pl, sc):
     )
 
     # Add reference points
-    ref_points = pl.DataFrame({
+    ref_points = pd.DataFrame({
         "rho": [0.5, 0.8, 0.9, 0.95],
         "L": [1.0, 4.0, 9.0, 19.0],
         "label": ["ρ=0.5: L=1", "ρ=0.8: L=4", "ρ=0.9: L=9", "ρ=0.95: L=19"]
     })
 
-    points = alt.Chart(ref_points.to_pandas()).mark_point(size=100, color="red", filled=True).encode(
+    points = alt.Chart(ref_points).mark_point(size=100, color="red", filled=True).encode(
         x="rho:Q",
         y="L:Q"
     )
 
-    labels = alt.Chart(ref_points.to_pandas()).mark_text(align="right", dx=-10, fontSize=12).encode(
+    labels = alt.Chart(ref_points).mark_text(align="right", dx=-10, fontSize=12).encode(
         x="rho:Q",
         y="L:Q",
         text="label:N"
@@ -1027,7 +1025,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(alt, mo, np, pl, sc, tradeoff_rho):
+def _(alt, mo, np, pd, sc, tradeoff_rho):
     # Slide 3.1 — The efficiency-responsiveness trade-off
     slide_3_1 = sc.create_slide(
         "The efficiency-responsiveness trade-off",
@@ -1062,7 +1060,7 @@ def _(alt, mo, np, pl, sc, tradeoff_rho):
     _W_values = _L_values / (_rho_values * _mu) * 60  # in minutes
     _Wq_values = _Lq_values / (_rho_values * _mu) * 60  # in minutes
 
-    df_curve = pl.DataFrame({
+    df_curve = pd.DataFrame({
         "rho": np.round(_rho_values, 2),
         "L": np.round(_L_values, 2),
         "Lq": np.round(_Lq_values, 2),
@@ -1074,14 +1072,14 @@ def _(alt, mo, np, pl, sc, tradeoff_rho):
     _current_rho = tradeoff_rho.value
     _current_L = _current_rho / (1 - _current_rho)
 
-    df_point = pl.DataFrame({
+    df_point = pd.DataFrame({
         "rho": [_current_rho],
         "L": [_current_L],
         "label": [f"ρ={_current_rho:.0%}"]
     })
 
     # Create the chart - same style as slide 2.8
-    frontier_line = alt.Chart(df_curve.to_pandas()).mark_line(
+    frontier_line = alt.Chart(df_curve).mark_line(
         strokeWidth=3, color="#2563eb"
     ).encode(
         x=alt.X("rho:Q", title="Utilization (ρ)", scale=alt.Scale(domain=[0, 1])),
@@ -1095,11 +1093,11 @@ def _(alt, mo, np, pl, sc, tradeoff_rho):
         ]
     )
 
-    current_point = alt.Chart(df_point.to_pandas()).mark_point(
+    current_point = alt.Chart(df_point).mark_point(
         size=200, color="red", filled=True
     ).encode(x="rho:Q", y="L:Q")
 
-    point_label = alt.Chart(df_point.to_pandas()).mark_text(
+    point_label = alt.Chart(df_point).mark_text(
         align="right", dx=-10, dy=-10, fontSize=14, fontWeight="bold"
     ).encode(x="rho:Q", y="L:Q", text="label:N")
 
@@ -1208,7 +1206,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(alt, math, mo, np, pl, sc, show_pooled, show_separate):
+def _(alt, math, mo, np, pd, sc, show_pooled, show_separate):
     # Slide 3.2b — Interactive comparison: separate vs pooled queues
     slide_3_2b = sc.create_slide(
         "Comparing queue configurations",
@@ -1277,9 +1275,9 @@ def _(alt, math, mo, np, pl, sc, show_pooled, show_separate):
             })
 
     if data_rows:
-        df_compare = pl.DataFrame(data_rows)
+        df_compare = pd.DataFrame(data_rows)
 
-        comparison_chart = alt.Chart(df_compare.to_pandas()).mark_line(strokeWidth=3).encode(
+        comparison_chart = alt.Chart(df_compare).mark_line(strokeWidth=3).encode(
             x=alt.X("rho:Q", title="Utilization (ρ)", scale=alt.Scale(domain=[0, 1])),
             y=alt.Y("L:Q", title="Avg customers in system (L)", scale=alt.Scale(domain=[0, 30])),
             color=alt.Color("System:N",
@@ -1446,7 +1444,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(alt, mo, np, pl, sc, show_cv_0, show_cv_1, show_cv_15):
+def _(alt, mo, np, pd, sc, show_cv_0, show_cv_1, show_cv_15):
     # Slide 3.3b — Variability explorer (interactive comparison)
     slide_3_3b = sc.create_slide(
         "Comparing variability levels",
@@ -1499,9 +1497,9 @@ def _(alt, mo, np, pl, sc, show_cv_0, show_cv_1, show_cv_15):
                                   "W": round(_W, 1), "Wq": round(_Wq, 1), "Setting": "CV = 1.5 (high var)"})
 
     if var_data_rows:
-        df_var = pl.DataFrame(var_data_rows)
+        df_var = pd.DataFrame(var_data_rows)
 
-        var_chart = alt.Chart(df_var.to_pandas()).mark_line(strokeWidth=3).encode(
+        var_chart = alt.Chart(df_var).mark_line(strokeWidth=3).encode(
             x=alt.X("rho:Q", title="Utilization (ρ)", scale=alt.Scale(domain=[0, 1])),
             y=alt.Y("L:Q", title="Avg customers in system (L)", scale=alt.Scale(domain=[0, 30])),
             color=alt.Color("Setting:N",
@@ -1694,7 +1692,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(alt, constant_staff_slider, math, mo, pl, sc):
+def _(alt, constant_staff_slider, math, mo, pd, sc):
     # Slide 4.2 — Can constant staffing work? (Interactive failure experience)
     slide_4_2 = sc.create_slide(
         "Can constant staffing work?",
@@ -1732,7 +1730,7 @@ def _(alt, constant_staff_slider, math, mo, pl, sc):
 
     _metrics = [_calc_mms_metrics(arr, _mu_rate, _s) for arr in _arrival_rates]
 
-    _df_util = pl.DataFrame({
+    _df_util = pd.DataFrame({
         "Time": _time_blocks,
         "λ (arrivals/hr)": _arrival_rates,
         "Utilization": _utilizations,
@@ -1744,7 +1742,7 @@ def _(alt, constant_staff_slider, math, mo, pl, sc):
         "Status": ["Unstable" if u >= 1 else ("High" if u >= 0.85 else "OK") for u in _utilizations]
     })
 
-    _util_chart = alt.Chart(_df_util.to_pandas()).mark_bar().encode(
+    _util_chart = alt.Chart(_df_util).mark_bar().encode(
         x=alt.X("Time:N", sort=_time_blocks, title="Time Block"),
         y=alt.Y("Utilization:Q", title="Utilization (ρ)", scale=alt.Scale(domain=[0, 1.5])),
         color=alt.Color("Status:N",
@@ -1766,10 +1764,10 @@ def _(alt, constant_staff_slider, math, mo, pl, sc):
     ).properties(width=900, height=280, title=f"Utilization by hour with constant s = {_s}")
 
     # Add threshold lines
-    _threshold_100 = alt.Chart(pl.DataFrame({"y": [1.0]}).to_pandas()).mark_rule(
+    _threshold_100 = alt.Chart(pd.DataFrame({"y": [1.0]})).mark_rule(
         color="#dc2626", strokeDash=[5, 5], strokeWidth=2
     ).encode(y="y:Q")
-    _threshold_85 = alt.Chart(pl.DataFrame({"y": [0.85]}).to_pandas()).mark_rule(
+    _threshold_85 = alt.Chart(pd.DataFrame({"y": [0.85]})).mark_rule(
         color="#f59e0b", strokeDash=[3, 3], strokeWidth=1
     ).encode(y="y:Q")
 
@@ -1862,7 +1860,7 @@ def _(mo):
 
 
 @app.cell(hide_code=True)
-def _(afternoon_staff_slider, alt, math, mo, morning_staff_slider, pl, sc):
+def _(afternoon_staff_slider, alt, math, mo, morning_staff_slider, pd, sc):
     # Slide 4.4 — Two-shift staffing decision (interactive exercise)
     slide_4_4 = sc.create_slide(
         "Two-shift staffing decision",
@@ -1904,7 +1902,7 @@ def _(afternoon_staff_slider, alt, math, mo, morning_staff_slider, pl, sc):
 
     _metrics = [_calc_mms_metrics(arr, _mu_rate, s) for arr, s in zip(_arrival_rates, _staffing)]
 
-    _df_util = pl.DataFrame({
+    _df_util = pd.DataFrame({
         "Time": _time_blocks,
         "λ (arrivals/hr)": _arrival_rates,
         "Staff": _staffing,
@@ -1918,7 +1916,7 @@ def _(afternoon_staff_slider, alt, math, mo, morning_staff_slider, pl, sc):
         "Shift": ["Morning"] * 5 + ["Afternoon"] * 5
     })
 
-    _util_chart = alt.Chart(_df_util.to_pandas()).mark_bar().encode(
+    _util_chart = alt.Chart(_df_util).mark_bar().encode(
         x=alt.X("Time:N", sort=_time_blocks, title="Time Block"),
         y=alt.Y("Utilization:Q", title="Utilization (ρ)", scale=alt.Scale(domain=[0, 1.5])),
         color=alt.Color("Status:N",
@@ -1941,10 +1939,10 @@ def _(afternoon_staff_slider, alt, math, mo, morning_staff_slider, pl, sc):
     ).properties(width=850, height=250)
 
     # Threshold lines
-    _threshold_100 = alt.Chart(pl.DataFrame({"y": [1.0]}).to_pandas()).mark_rule(
+    _threshold_100 = alt.Chart(pd.DataFrame({"y": [1.0]})).mark_rule(
         color="#dc2626", strokeDash=[5, 5], strokeWidth=2
     ).encode(y="y:Q")
-    _threshold_90 = alt.Chart(pl.DataFrame({"y": [0.90]}).to_pandas()).mark_rule(
+    _threshold_90 = alt.Chart(pd.DataFrame({"y": [0.90]})).mark_rule(
         color="#f59e0b", strokeDash=[3, 3], strokeWidth=1
     ).encode(y="y:Q")
 
