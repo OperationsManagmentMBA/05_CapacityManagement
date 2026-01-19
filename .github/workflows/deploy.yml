@@ -22,7 +22,7 @@ jobs:
           pip install marimo altair numpy
 
       - name: Export capacity management app as HTML
-        run: MARIMO_OUTPUT_MAX_BYTES=50000000 marimo export html-wasm capacity.py -o site/capacity --mode run
+        run: MARIMO_OUTPUT_MAX_BYTES=50000000 marimo export html-wasm capacity.py -o site/capacity --mode edit
 
       - name: Copy public assets
         run: |
