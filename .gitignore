@@ -19,3 +19,6 @@ wheels/
 # Project-specific exclusions
 background/
 main.py
+
+# Build output
+_site/
