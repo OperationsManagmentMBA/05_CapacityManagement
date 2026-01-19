@@ -1373,7 +1373,7 @@ def _(mo, sc):
     deterministic_diagram = mo.Html("""
     <div style="text-align: center; padding: 12px; background: #f0fdf4; border-radius: 8px; border: 2px solid #22c55e; width: 280px;">
         <div style="font-weight: bold; color: #166534; margin-bottom: 8px;">Standardized Process</div>
-        <div style="font-size: 12px; color: #666; margin-bottom: 8px;">e.g., Self-checkout kiosk, automated pickup</div>
+        <div style="font-size: 12px; color: #666; margin-bottom: 8px;">e.g., Self-checkout kiosk</div>
         <div style="display: flex; justify-content: center; align-items: flex-end; gap: 4px; height: 60px;">
             <div style="width: 20px; height: 40px; background: #22c55e;"></div>
             <div style="width: 20px; height: 40px; background: #22c55e;"></div>
@@ -1676,13 +1676,12 @@ def _(mo, sc):
         | 11am-12pm | 15 | 25 |
         | 12-1pm | 10 | 20 |
         | 1-2pm | 15 | 25 |
-        | 2-3pm | 20 | 35 |
-        | 3-4pm | 25 | 40 |
-        | 4-5pm | 30 | 50 |
-        | 5-6pm | 25 | 40 |
+        | 2-3pm | 25 | 35 |
+        | 3-4pm | 32 | 40 |
+        | 4-5pm | 35 | 50 |
+        | 5-6pm | 20 | 40 |
         """
     )
-
     slide_4_1.render()
     return
 
@@ -1705,7 +1704,7 @@ def _(alt, constant_staff_slider, math, mo, pl, sc):
 
     # Time block data (same λ(t) pattern from 4.1)
     _time_blocks = ["8-9", "9-10", "10-11", "11-12", "12-1", "1-2", "2-3", "3-4", "4-5", "5-6"]
-    _arrival_rates = [20, 25, 20, 15, 10, 15, 20, 25, 30, 25]
+    _arrival_rates = [20, 25, 20, 15, 10, 15, 25, 32, 35, 20]
     _mu_rate = 10  # Service rate per server (customers/hour)
 
     # Calculate utilization for each block with constant staffing
@@ -1873,7 +1872,7 @@ def _(afternoon_staff_slider, alt, math, mo, morning_staff_slider, pl, sc):
 
     # Time block data
     _time_blocks = ["8-9", "9-10", "10-11", "11-12", "12-1", "1-2", "2-3", "3-4", "4-5", "5-6"]
-    _arrival_rates = [20, 25, 20, 15, 10, 15, 20, 25, 30, 25]
+    _arrival_rates = [20, 25, 20, 15, 10, 15, 25, 32, 35, 20]
     _mu_rate = 10  # Service rate per server
 
     # Morning blocks: 8-9, 9-10, 10-11, 11-12, 12-1 (indices 0-4)
