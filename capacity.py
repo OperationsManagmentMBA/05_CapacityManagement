@@ -19,22 +19,24 @@ async def _():
             "polars",
             "altair",
             "numpy",
+            "pyarrow",
         ]
 
         for pkg in packages:
             print(f"Installing {pkg}...")
             await micropip.install(pkg)
 
-        print("All packages installed.")
+        print("✅ All packages installed.")
     except ImportError:
         # Running locally, packages should already be installed
         print("Running in local mode, skipping micropip installation")
-    return
+    _wasm_ready = True
+    return (_wasm_ready,)
 
 
 @app.cell(hide_code=True)
-def _():
-    # Import required libraries
+def _(_wasm_ready):
+    # Import required libraries (depends on _wasm_ready to ensure micropip runs first)
     import marimo as mo
     import altair as alt
     import polars as pl
