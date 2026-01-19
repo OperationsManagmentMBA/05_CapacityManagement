@@ -15,11 +15,12 @@ async def _():
     try:
         import micropip
 
+        # Install required packages
         packages = [
             "polars",
             "altair",
             "numpy",
-            "pyarrow",
+            "pyarrow"
         ]
 
         for pkg in packages:
@@ -30,13 +31,12 @@ async def _():
     except ImportError:
         # Running locally, packages should already be installed
         print("Running in local mode, skipping micropip installation")
-    _wasm_ready = True
-    return (_wasm_ready,)
+    return
 
 
 @app.cell(hide_code=True)
-def _(_wasm_ready):
-    # Import required libraries (depends on _wasm_ready to ensure micropip runs first)
+def _():
+    # Import required libraries
     import marimo as mo
     import altair as alt
     import polars as pl
